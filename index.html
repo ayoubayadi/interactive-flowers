@@ -408,6 +408,81 @@
         }
     </script>
 
+
+
+
+
+    
+<script>
+ // Create heart particles
+        function createHearts() {
+            const container = document.getElementById('particles');
+            const colors = ['#ff6b9d', '#c44569', '#f8b500', '#ff9ff3', '#feca57', '#ff6b6b', '#ee5a6f'];
+            
+            for (let i = 0; i < 30; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                
+                // Random styling
+                const size = 10 + Math.random() * 20;
+                heart.style.width = size + 'px';
+                heart.style.height = size + 'px';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+                heart.style.animationDelay = Math.random() * 15 + 's';
+                heart.style.animationDuration = (10 + Math.random() * 10) + 's';
+                
+                // Random opacity
+                heart.style.opacity = 0.3 + Math.random() * 0.4;
+                
+                container.appendChild(heart);
+            }
+        }
+        createHearts();
+
+        // Elements
+        const audio = document.getElementById('bgMusic');
+        const startOverlay = document.getElementById('startOverlay');
+        const muteBtn = document.getElementById('muteBtn');
+        const muteIcon = document.getElementById('muteIcon');
+
+        // Enter site and start music
+        function enterSite() {
+            startOverlay.classList.add('hidden');
+            muteBtn.classList.add('visible');
+            
+            audio.volume = 0.5;
+            audio.play().catch(e => console.log('Autoplay blocked:', e));
+        }
+
+        // Toggle mute/unmute
+        function toggleMute() {
+            if (audio.muted) {
+                audio.muted = false;
+                muteIcon.textContent = '🔊';
+            } else {
+                audio.muted = true;
+                muteIcon.textContent = '🔇';
+            }
+        }
+
+        // Remember mute preference
+        if (localStorage.getItem('muted') === 'true') {
+            audio.muted = true;
+            muteIcon.textContent = '🔇';
+        }
+
+        muteBtn.addEventListener('click', () => {
+            localStorage.setItem('muted', audio.muted);
+        });
+</script>
+
+
+
+
+
+
+    
     <!-- Application Logic -->
     <script type="module">
         import * as THREE from 'https://esm.sh/three@0.133.1';
@@ -541,67 +616,7 @@
 
 
 
-        // Create heart particles
-        function createHearts() {
-            const container = document.getElementById('particles');
-            const colors = ['#ff6b9d', '#c44569', '#f8b500', '#ff9ff3', '#feca57', '#ff6b6b', '#ee5a6f'];
-            
-            for (let i = 0; i < 30; i++) {
-                const heart = document.createElement('div');
-                heart.className = 'heart';
-                
-                // Random styling
-                const size = 10 + Math.random() * 20;
-                heart.style.width = size + 'px';
-                heart.style.height = size + 'px';
-                heart.style.left = Math.random() * 100 + '%';
-                heart.style.color = colors[Math.floor(Math.random() * colors.length)];
-                heart.style.animationDelay = Math.random() * 15 + 's';
-                heart.style.animationDuration = (10 + Math.random() * 10) + 's';
-                
-                // Random opacity
-                heart.style.opacity = 0.3 + Math.random() * 0.4;
-                
-                container.appendChild(heart);
-            }
-        }
-        createHearts();
-
-        // Elements
-        const audio = document.getElementById('bgMusic');
-        const startOverlay = document.getElementById('startOverlay');
-        const muteBtn = document.getElementById('muteBtn');
-        const muteIcon = document.getElementById('muteIcon');
-
-        // Enter site and start music
-        function enterSite() {
-            startOverlay.classList.add('hidden');
-            muteBtn.classList.add('visible');
-            
-            audio.volume = 0.5;
-            audio.play().catch(e => console.log('Autoplay blocked:', e));
-        }
-
-        // Toggle mute/unmute
-        function toggleMute() {
-            if (audio.muted) {
-                audio.muted = false;
-                muteIcon.textContent = '🔊';
-            } else {
-                audio.muted = true;
-                muteIcon.textContent = '🔇';
-            }
-        }
-
-        // Remember mute preference
-        if (localStorage.getItem('muted') === 'true') {
-            audio.muted = true;
-            muteIcon.textContent = '🔇';
-        }
-
-        muteBtn.addEventListener('click', () => {
-            localStorage.setItem('muted', audio.muted);
-        });
+       
     </script>
 </body>
 </html>
