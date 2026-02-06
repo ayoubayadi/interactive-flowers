@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cats only</title>
+    <title>Ons only</title>
     <style>
         html, body {
             overflow: hidden;
@@ -60,11 +60,151 @@
                 font-size: 45px
             }
         }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            animation: float 20s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Start Overlay - Full Screen Blur */
+        .start-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease, visibility 0.6s;
+        }
+
+        .start-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .start-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 20px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: inherit;
+        }
+
+        .start-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Mute Button  */
+        .mute-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+
+        .mute-btn.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .mute-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .mute-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+            }
+        }
+        
     </style>
 <base target="_blank">
 </head>
 <body>
+     <!-- Background Particles -->
+    <div class="particles" id="particles"></div>
 
+    <!-- Start Overlay -->
+    <div class="start-overlay" id="startOverlay">
+        <button class="start-btn" onclick="enterSite()">
+            <span>▶</span> Enter Experience
+        </button>
+    </div>
+
+    <!-- Minimal Mute Button -->
+    <button class="mute-btn" id="muteBtn" onclick="toggleMute()">
+        <span id="muteIcon">🔊</span>
+    </button>
+
+    <!-- Audio Element -->
+    <audio id="bgMusic" loop>
+        <source src="your-music-file.mp3" type="audio/mpeg">
+        <!-- Fallback for other formats -->
+        <source src="your-music-file.ogg" type="audio/ogg">
+    </audio>
+
+    
     <div class="container">
         <canvas id="canvas"></canvas>
         <div class="clean-btn">
@@ -361,6 +501,61 @@
             shaderMaterial.uniforms.u_ratio.value = window.innerWidth / window.innerHeight
             renderer.setSize(window.innerWidth, window.innerHeight)
         }
+
+
+
+        // Create particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 40; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                particle.style.width = (4 + Math.random() * 8) + 'px';
+                particle.style.height = particle.style.width;
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Elements
+        const audio = document.getElementById('bgMusic');
+        const startOverlay = document.getElementById('startOverlay');
+        const muteBtn = document.getElementById('muteBtn');
+        const muteIcon = document.getElementById('muteIcon');
+
+        // Enter site and start music
+        function enterSite() {
+            startOverlay.classList.add('hidden');
+            muteBtn.classList.add('visible');
+            
+            // Start playing
+            audio.volume = 0.5;
+            audio.play().catch(e => console.log('Autoplay blocked:', e));
+        }
+
+        // Toggle mute/unmute
+        function toggleMute() {
+            if (audio.muted) {
+                audio.muted = false;
+                muteIcon.textContent = '🔊';
+            } else {
+                audio.muted = true;
+                muteIcon.textContent = '🔇';
+            }
+        }
+
+        // Optional: Remember mute preference
+        if (localStorage.getItem('muted') === 'true') {
+            audio.muted = true;
+            muteIcon.textContent = '🔇';
+        }
+
+        muteBtn.addEventListener('click', () => {
+            localStorage.setItem('muted', audio.muted);
+        });
     </script>
 </body>
 </html>
