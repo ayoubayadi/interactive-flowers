@@ -1,7 +1,6 @@
 ## Preview
 
-Click the image below to reveal the flowers 🌸
-
+blurred screen for the starter and then click to get flowers , with a song playing in the background 
 [![Blurred Starter - Click to reveal flowers](screenshot.jpg)](screenshot.jpg) 
 
 *Background music plays automatically*
@@ -12,3 +11,7 @@ https://user-images.githubusercontent.com/ayoubayadi/interactive-flowers/demo.mp
 
 <!-- Or if hosted elsewhere: -->
 [Watch Demo Video](demo.mp4)
+
+![App Screenshot](screenshot.jpg)
+
+![Demo](demo.mp4)
