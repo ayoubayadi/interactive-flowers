@@ -1,4 +1,4 @@
 blurred screen for the starter and then click to get flowers , with a song playing in the background
-![App Screenshot](screenshot.png)
+![App Screenshot](screenshot.jpg)
 
-![Demo](dem.mp4)
+![Demo](demo.mp4)
